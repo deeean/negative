@@ -1,0 +1,28 @@
+{
+  "productName": "Negative",
+  "version": "0.1.0",
+  "identifier": "com.negative.app",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "./dist"
+  },
+  "bundle": {
+    "icon": ["icons/icon.ico", "icons/icon.png"]
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Negative",
+        "width": 800,
+        "height": 520,
+        "minWidth": 600,
+        "minHeight": 400,
+        "decorations": false,
+        "center": true,
+        "backgroundColor": "#09090b"
+      }
+    ]
+  }
+}
