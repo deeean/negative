@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: i686-pc-windows-msvc
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install frontend dependencies
+        working-directory: crates/injector
+        run: bun install
+
+      - name: Build injector (tauri)
+        working-directory: crates/injector
+        run: bunx tauri build
+
+      - name: Build 32-bit (payload + helper)
+        run: cargo build --release -p payload -p helper --target i686-pc-windows-msvc
+
+      - name: Collect artifacts
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp target/release/injector.exe dist/
+          cp target/release/payload.dll dist/
+          cp target/i686-pc-windows-msvc/release/payload.dll dist/payload32.dll
+          cp target/i686-pc-windows-msvc/release/helper.exe dist/helper32.exe
+
+      - name: Archive
+        shell: bash
+        run: cd dist && 7z a ../negative-${{ github.ref_name }}.zip *
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: negative-${{ github.ref_name }}.zip
+          generate_release_notes: true
