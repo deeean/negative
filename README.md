@@ -2,6 +2,8 @@
 
 A user-mode process hiding toolkit via DLL injection and API hooking.
 
+Download the latest version from the [releases](https://github.com/deeean/negative/releases/latest) page.
+
 ![example](docs/example.png)
 
 ## Features
